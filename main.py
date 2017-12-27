@@ -39,11 +39,11 @@ def predict():
 
             return jsonify({'prediction': prediction})
 
-        except Exception, e:
+        except Exception as e:
 
             return jsonify({'error': str(e), 'trace': traceback.format_exc()})
     else:
-        print 'train first'
+        print('train first')
         return 'no model here'
 
 
@@ -58,7 +58,7 @@ def train():
 
     categoricals = []  # going to one-hot encode categorical variables
 
-    for col, col_type in df_.dtypes.iteritems():
+    for col, col_type in df_.dtypes.items():
         if col_type == 'O':
             categoricals.append(col)
         else:
@@ -79,8 +79,8 @@ def train():
     clf = rf()
     start = time.time()
     clf.fit(x, y)
-    print 'Trained in %.1f seconds' % (time.time() - start)
-    print 'Model training score: %s' % clf.score(x, y)
+    print('Trained in %.1f seconds' % (time.time() - start))
+    print('Model training score: %s' % clf.score(x, y))
 
     joblib.dump(clf, model_file_name)
 
@@ -94,27 +94,27 @@ def wipe():
         os.makedirs(model_directory)
         return 'Model wiped'
 
-    except Exception, e:
-        print str(e)
+    except Exception as e:
+        print(str(e))
         return 'Could not remove and recreate the model directory'
 
 
 if __name__ == '__main__':
     try:
         port = int(sys.argv[1])
-    except Exception, e:
+    except Exception as e:
         port = 80
 
     try:
         clf = joblib.load(model_file_name)
-        print 'model loaded'
+        print('model loaded')
         model_columns = joblib.load(model_columns_file_name)
-        print 'model columns loaded'
+        print('model columns loaded')
 
-    except Exception, e:
-        print 'No model here'
-        print 'Train first'
-        print str(e)
+    except Exception as e:
+        print('No model here')
+        print('Train first')
+        print(str(e))
         clf = None
 
     app.run(host='0.0.0.0', port=port, debug=True)
